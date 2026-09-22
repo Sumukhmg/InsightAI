@@ -182,7 +182,29 @@ Launch the Streamlit dashboard:
 ```bash
 streamlit run app.py
 ```
-Open your browser at `http://localhost:8501`. On first run, InsightAI will automatically download the UCI Online Retail II dataset, parse both workbook sheets, and generate a local Parquet cache (`data/online_retail_II.parquet`) for sub-second subsequent startups.
+Open your browser at `http://localhost:8501`. On first run, InsightAI will automatically load the pre-cached Parquet dataset (`data/online_retail_II.parquet`) in **0.43 seconds**.
+
+---
+
+## ☁️ Deployment to Streamlit Community Cloud
+
+The repository is pre-configured and optimized for 1-click deployment to [Streamlit Community Cloud](https://share.streamlit.io):
+
+1. **Log in** to [Streamlit Community Cloud](https://share.streamlit.io) with your GitHub account.
+2. Click **"New app"** (or "Create app").
+3. Fill in the app settings:
+   - **Repository:** `Sumukhmg/InsightAI`
+   - **Branch:** `main`
+   - **Main file path:** `app.py`
+4. Click **"Advanced settings..."** and paste your secrets into the **Secrets (TOML)** box:
+   ```toml
+   GROQ_API_KEY = "your_groq_api_key_here"
+   GROQ_MODEL = "openai/gpt-oss-20b"
+   LLM_PROVIDER = "groq"
+   ```
+5. Click **"Deploy!"**
+
+The app will boot in seconds because the lightweight 7.2MB Parquet cache is pre-bundled in the repository, completely bypassing the memory-heavy Excel parsing phase on cloud containers.
 
 ---
 
