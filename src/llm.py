@@ -31,9 +31,31 @@ class LLMClient:
         model: Optional[str] = None,
         provider: Optional[str] = None
     ):
-        self.api_key = api_key or os.getenv("GROQ_API_KEY", "").strip()
-        self.model = model or os.getenv("GROQ_MODEL", "openai/gpt-oss-20b").strip()
-        self.provider = (provider or os.getenv("LLM_PROVIDER", "groq")).strip().lower()
+        # 1. Explicit arguments
+        self.api_key = (api_key or "").strip()
+        self.model = (model or "").strip()
+        self.provider = (provider or "").strip().lower()
+
+        # 2. Check Streamlit secrets (Streamlit Community Cloud)
+        try:
+            import streamlit as st
+            if not self.api_key and "GROQ_API_KEY" in st.secrets:
+                self.api_key = str(st.secrets["GROQ_API_KEY"]).strip()
+            if not self.model and "GROQ_MODEL" in st.secrets:
+                self.model = str(st.secrets["GROQ_MODEL"]).strip()
+            if not self.provider and "LLM_PROVIDER" in st.secrets:
+                self.provider = str(st.secrets["LLM_PROVIDER"]).strip().lower()
+        except Exception:
+            pass
+
+        # 3. Fallback to os.getenv / defaults
+        if not self.api_key:
+            self.api_key = os.getenv("GROQ_API_KEY", "").strip()
+        if not self.model:
+            self.model = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b").strip()
+        if not self.provider:
+            self.provider = os.getenv("LLM_PROVIDER", "groq").strip().lower()
+
         self.ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
     def is_configured(self) -> bool:

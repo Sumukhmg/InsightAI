@@ -22,10 +22,12 @@ env/
 # Large Data Files & Datasets
 data/*.xlsx
 data/*.csv
-data/*.parquet
 data/*.duckdb
 *.zip
 *.tar.gz
+
+# Track the lightweight 7.2MB Parquet cache for instant Streamlit Cloud deployment
+!data/online_retail_II.parquet
 
 # Streamlit
 .streamlit/secrets.toml
